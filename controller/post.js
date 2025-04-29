@@ -41,7 +41,11 @@ exports.createPost = async (req, res) => {
 
 exports.getPost = async (req, res) => {
   try {
-    const post = await postModel.find();
+    const where = {};
+    if (req.query.userId) {
+      where.user = req.query.userId;
+    }
+    const post = await postModel.find(where);
 
     const mapPost = post.map(mapper);
     res.status(200).json({

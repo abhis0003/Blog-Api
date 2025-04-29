@@ -38,6 +38,8 @@ exports.register = async (req, res) => {
     }
 
     const { email } = req.body;
+    
+     
 
     const existingUser = await UserModel.findOne({ email });
     if (existingUser) {

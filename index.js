@@ -32,8 +32,12 @@ const todoRoutes = require("./routes/todo");
 const uploadRoutes = require ('./routes/uploads')
 const postRoutes = require ('./routes/post')
 const commentRoutes = require ('./routes/comment')
+const requestRoutes = require ('./routes/friend-request')
 
 
+
+
+app.use('/api/request', requestRoutes)
 app.use('/api/comment', commentRoutes)
 app.use('/api/post', postRoutes)
 app.use("/api/auth", authRoutes);

@@ -16,18 +16,6 @@ const mapper = (entity) => {
 };
 
 
-// const commentMapper = (entity) => {
-//     const model = {
-//         id : entity._id,
-//         text : entity.text,
-//         postId : entity.postId,
-
-
-//     }
-//     return model;
-
-// }
-
 exports.createComment = async (req, res) => {
   try {
     const { postId, text } = req.body;
