@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const friendRequestModel = new mongoose.Schema({
-  senderId: { type: mongoose.Types.ObjectId, ref: "post" },
+  senderId: { type: mongoose.Types.ObjectId, ref: "users" },
   recieverId: { type: mongoose.Types.ObjectId, ref : "users" },
   status: {
     type: String,

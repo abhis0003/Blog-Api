@@ -89,9 +89,8 @@ exports.getRequests = async (req, res) => {
 };
 
 exports.respondToRequest = async (req, res) => {
-  const requestId = req.params.id
-  const {status} = req.body;
-  
+  const requestId = req.params.id;
+  const { status } = req.body;
 
   if (!["accepted", "rejected"].includes(status)) {
     return res.status(400).json({
@@ -112,10 +111,8 @@ exports.respondToRequest = async (req, res) => {
     await request.save();
 
     return res.status(200).json({
-      message: "success"
-    })
-
-
+      message: "success",
+    });
   } catch (error) {
     return res.status(500).json({
       message: "Internal Servor Error",
@@ -124,21 +121,32 @@ exports.respondToRequest = async (req, res) => {
   }
 };
 
-
 exports.friendList = async (req, res) => {
   try {
     const userId = req.userId;
 
     // Find all accepted friend requests where the user is either the sender or receiver
-    const friends = await friendRequestModel.find({
-      $or: [{ senderId: userId, status: "accepted" }, { recieverId: userId, status: "accepted" }],
-    });
+    const friends = await friendRequestModel
+      .find({
+        $or: [
+          { senderId: userId, status: "accepted" },
+          { recieverId: userId, status: "accepted" },
+        ],
+      })
+
+      .populate("senderId", "name email")
+      .populate("recieverId", "name email");
 
     // Map the results to include only relevant information
     const friendList = friends.map((request) => {
-      return request.senderId.toString() === userId
-        ? { friendId: request.recieverId, status: request.status }
-        : { friendId: request.senderId, status: request.status };
+      const isSender = request.senderId.toString() === userId;
+      const friend = isSender ? request.recieverId : request.senderId;
+
+      return {
+        friendId: friend._id,
+        name: friend.name,
+        email: friend.email,
+      };
     });
 
     res.status(200).json({
@@ -149,8 +157,9 @@ exports.friendList = async (req, res) => {
     return res.status(500).json({
       message: "Internal Servor Error",
       error: error.message,
-    })
-}}
+    });
+  }
+};
 
 exports.deleteFriend = async (req, res) => {
   try {
